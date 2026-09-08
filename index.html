@@ -305,14 +305,13 @@
                 };
                 reader.readAsDataURL(imageFile);
             } else {
-                sendDataToSheet('');
+                sendDataTest = sendDataToSheet('');
             }
         }
 
-        // ฟังก์ชันช่วยแปลงรูปแบบวันที่จาก YYYY-MM-DD เป็น DD/MM/YYYY
+        // ฟังก์ชันช่วยแปลงรูปแบบวันที่จาก YYYY-MM-DD เป็น วัน/เดือน/ปี (DD/MM/YYYY)
         function formatDateToThai(dateStr) {
             if (!dateStr) return '-';
-            // กรณีรูปแบบเป็น YYYY-MM-DD
             const parts = dateStr.split('-');
             if (parts.length === 3) {
                 return `${parts[2]}/${parts[1]}/${parts[0]}`;
