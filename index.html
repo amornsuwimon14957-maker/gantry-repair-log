@@ -309,6 +309,17 @@
             }
         }
 
+        // ฟังก์ชันช่วยแปลงรูปแบบวันที่จาก YYYY-MM-DD เป็น DD/MM/YYYY
+        function formatDateToThai(dateStr) {
+            if (!dateStr) return '-';
+            // กรณีรูปแบบเป็น YYYY-MM-DD
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return dateStr;
+        }
+
         async function loadHistory() {
             showLoading(true);
             const historyList = document.getElementById('historyList');
@@ -330,7 +341,7 @@
                         ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full md:w-32 h-32 object-cover rounded-lg border">` : '<div class="w-full md:w-32 h-32 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-400">ไม่มีรูปภาพ</div>'}
                         <div class="flex-1 space-y-1">
                             <div class="flex justify-between items-start">
-                                <span class="text-xs font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">วันที่ซ่อม: ${item.date}</span>
+                                <span class="text-xs font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">วันที่ซ่อม: ${formatDateToThai(item.date)}</span>
                                 <span class="text-xs text-slate-400">บันทึกโดย: ${item.mechanic}</span>
                             </div>
                             <h3 class="font-bold text-slate-800 text-lg">อาการ: ${item.issue}</h3>
