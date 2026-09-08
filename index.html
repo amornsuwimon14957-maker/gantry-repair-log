@@ -13,6 +13,14 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800">
 
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/30 z-50 flex items-center justify-center">
+        <div class="bg-white p-4 rounded-xl shadow-lg flex items-center gap-3">
+            <svg class="animate-spin h-5 w-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span class="text-sm font-medium">กำลังโหลดข้อมูลจากชีต2...</span>
+        </div>
+    </div>
+
     <!-- App Container -->
     <div id="app" class="max-w-4xl mx-auto p-4 md:p-6">
 
@@ -52,7 +60,6 @@
                 <div class="flex-grow border-t border-slate-200"></div>
             </div>
 
-            <!-- Separated Visitor Button -->
             <button onclick="handleVisitorLogin()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 rounded-lg transition duration-200 border border-slate-300 flex items-center justify-center gap-2 text-sm shadow-sm">
                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 เข้าชมระบบสำหรับ Visitor (ดูประวัติเท่านั้น)
@@ -61,16 +68,21 @@
 
         <!-- 2. DASHBOARD / MAIN MENU -->
         <div id="screen-main" class="hidden">
-            <!-- Header -->
             <div class="bg-white rounded-2xl shadow-sm p-6 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <span id="userBadge" class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Role</span>
                     <h1 class="text-xl font-bold mt-1">Gantry Crane (ลานผลิต Parapet เชียงราย)</h1>
                     <p class="text-xs text-slate-500">ผู้ใช้งาน: <span id="displayUserName" class="font-medium"></span></p>
                 </div>
-                <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800 font-medium px-4 py-2 border border-red-200 rounded-lg hover:bg-red-50 transition">
-                    ออกจากระบบ
-                </button>
+                <div class="flex items-center gap-3">
+                    <button onclick="loadHistory()" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg transition flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        รีเฟรชข้อมูล
+                    </button>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800 font-medium px-4 py-2 border border-red-200 rounded-lg hover:bg-red-50 transition">
+                        ออกจากระบบ
+                    </button>
+                </div>
             </div>
 
             <!-- Action Tabs -->
@@ -99,7 +111,7 @@
             <!-- SECTION: REPAIR FORM -->
             <div id="section-repair" class="bg-white rounded-2xl shadow-sm p-6 mb-6">
                 <h2 class="text-lg font-bold mb-4 border-b pb-2 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> บันทึกข้อมูลการซ่อมเครน
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> บันทึกข้อมูลการซ่อมเครน (ชีต2)
                 </h2>
                 <form id="repairForm" onsubmit="saveRepair(event)" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,7 +125,6 @@
                         </div>
                     </div>
 
-                    <!-- อะไหล่และราคา -->
                     <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
                         <label class="block text-sm font-bold text-slate-700">รายการอะไหล่ที่เปลี่ยน / ซ่อมแซม</label>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -137,7 +148,7 @@
                     </div>
 
                     <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 rounded-lg transition shadow">
-                        บันทึกประวัติการซ่อม
+                        บันทึกประวัติการซ่อม (ส่งเข้าชีต2)
                     </button>
                 </form>
             </div>
@@ -145,7 +156,7 @@
             <!-- SECTION: HISTORY LIST -->
             <div id="section-history" class="bg-white rounded-2xl shadow-sm p-6 hidden">
                 <h2 class="text-lg font-bold mb-4 border-b pb-2 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> ประวัติการซ่อมทั้งหมด
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> ประวัติการซ่อมทั้งหมด (ชีต2 Real-Time)
                 </h2>
                 <div id="historyList" class="space-y-4">
                     <!-- Data will be loaded here -->
@@ -155,12 +166,19 @@
 
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Logic with SheetDB API (Targeting ชีต2) -->
     <script>
-        let currentUser = null;
+        // กำหนด URL พร้อมพารามิเตอร์ระบุชื่อชีสเป็น "ชีต2"
+        const SHEET_API_URL = 'https://sheetdb.io/api/v1/phqskeea5cfet?sheet=%E0%B8%88%E0%B8%B5%E0%B8%952';
 
-        // Set default date to today
+        let currentUser = null;
         document.getElementById('repairDate').valueAsDate = new Date();
+
+        function showLoading(show) {
+            const loader = document.getElementById('loadingOverlay');
+            if(show) loader.classList.remove('hidden');
+            else loader.classList.add('hidden');
+        }
 
         function handleMechanicLogin(e) {
             e.preventDefault();
@@ -199,9 +217,7 @@
                 document.getElementById('displayUserName').innerText = currentUser.name;
                 document.getElementById('userBadge').innerText = currentUser.role === 'mechanic' ? 'ช่างซ่อมบำรุง' : 'Visitor';
 
-                // Control permissions
                 const repairTabBtn = document.getElementById('tabBtnRepair');
-                
                 if(currentUser.role === 'visitor') {
                     repairTabBtn.style.opacity = '0.5';
                     repairTabBtn.style.pointerEvents = 'none';
@@ -232,8 +248,9 @@
             }
         }
 
-        function saveRepair(e) {
+        async function saveRepair(e) {
             e.preventDefault();
+            showLoading(true);
 
             const date = document.getElementById('repairDate').value;
             const issue = document.getElementById('repairIssue').value;
@@ -242,66 +259,94 @@
             const note = document.getElementById('repairNote').value || '-';
             const imageFile = document.getElementById('repairImage').files[0];
 
-            const saveData = (imageUrl = '') => {
+            const sendDataToSheet = async (imageUrl = '') => {
                 const newRecord = {
-                    id: Date.now(),
-                    date,
-                    issue,
-                    partName,
-                    partPrice,
-                    note,
-                    imageUrl,
+                    id: String(Date.now()),
+                    date: date,
+                    issue: issue,
+                    partName: partName,
+                    partPrice: String(partPrice),
+                    note: note,
+                    imageUrl: imageUrl,
                     mechanic: currentUser.name,
                     timestamp: new Date().toLocaleString()
                 };
 
-                let history = JSON.parse(localStorage.getItem('gantry_repair_history') || '[]');
-                history.unshift(newRecord);
-                localStorage.setItem('gantry_repair_history', JSON.stringify(history));
+                try {
+                    const response = await fetch(SHEET_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ data: [newRecord] })
+                    });
 
-                alert('บันทึกประวัติการซ่อมสำเร็จ!');
-                document.getElementById('repairForm').reset();
-                document.getElementById('repairDate').valueAsDate = new Date();
-                switchTab('history');
+                    if(response.ok) {
+                        alert('บันทึกประวัติการซ่อมเข้าชีต2 สำเร็จ!');
+                        document.getElementById('repairForm').reset();
+                        document.getElementById('repairDate').valueAsDate = new Date();
+                        switchTab('history');
+                    } else {
+                        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('ไม่สามารถเชื่อมต่อกับ SheetDB ได้');
+                } finally {
+                    showLoading(false);
+                }
             };
 
             if(imageFile) {
                 const reader = new FileReader();
                 reader.onload = function(uploadEvent) {
-                    saveData(uploadEvent.target.result);
+                    sendDataToSheet(uploadEvent.target.result);
                 };
                 reader.readAsDataURL(imageFile);
             } else {
-                saveData('');
+                sendDataToSheet('');
             }
         }
 
-        function loadHistory() {
+        async function loadHistory() {
+            showLoading(true);
             const historyList = document.getElementById('historyList');
-            const history = JSON.parse(localStorage.getItem('gantry_repair_history') || '[]');
 
-            if(history.length === 0) {
-                historyList.innerHTML = `<p class="text-center text-slate-400 py-8">ยังไม่มีประวัติการซ่อมแซม</p>`;
-                return;
-            }
+            try {
+                const response = await fetch(SHEET_API_URL);
+                const history = await response.json();
 
-            historyList.innerHTML = history.map(item => `
-                <div class="border rounded-xl p-4 bg-slate-50 flex flex-col md:flex-row gap-4 items-start">
-                    ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full md:w-32 h-32 object-cover rounded-lg border">` : '<div class="w-full md:w-32 h-32 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-400">ไม่มีรูปภาพ</div>'}
-                    <div class="flex-1 space-y-1">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">วันที่ซ่อม: ${item.date}</span>
-                            <span class="text-xs text-slate-400">บันทึกโดย: ${item.mechanic}</span>
+                if(!Array.isArray(history) || history.length === 0) {
+                    historyList.innerHTML = `<p class="text-center text-slate-400 py-8">ยังไม่มีประวัติการซ่อมแซมในชีต2</p>`;
+                    showLoading(false);
+                    return;
+                }
+
+                history.sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
+
+                historyList.innerHTML = history.map(item => `
+                    <div class="border rounded-xl p-4 bg-slate-50 flex flex-col md:flex-row gap-4 items-start">
+                        ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full md:w-32 h-32 object-cover rounded-lg border">` : '<div class="w-full md:w-32 h-32 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-400">ไม่มีรูปภาพ</div>'}
+                        <div class="flex-1 space-y-1">
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">วันที่ซ่อม: ${item.date}</span>
+                                <span class="text-xs text-slate-400">บันทึกโดย: ${item.mechanic}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg">อาการ: ${item.issue}</h3>
+                            <p class="text-sm text-slate-600"><strong>อะไหล่:</strong> ${item.partName} | <strong>ราคา:</strong> <span class="text-amber-600 font-semibold">${Number(item.partPrice || 0).toLocaleString()} บาท</span></p>
+                            <p class="text-sm text-slate-500"><strong>หมายเหตุ:</strong> ${item.note}</p>
                         </div>
-                        <h3 class="font-bold text-slate-800 text-lg">อาการ: ${item.issue}</h3>
-                        <p class="text-sm text-slate-600"><strong>อะไหล่:</strong> ${item.partName} | <strong>ราคา:</strong> <span class="text-amber-600 font-semibold">${Number(item.partPrice).toLocaleString()} บาท</span></p>
-                        <p class="text-sm text-slate-500"><strong>หมายเหตุ:</strong> ${item.note}</p>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error(error);
+                historyList.innerHTML = `<p class="text-center text-red-400 py-8">ไม่สามารถโหลดข้อมูลจากชีต2 ได้</p>`;
+            } finally {
+                showLoading(false);
+            }
         }
 
-        // Run check on load
         window.onload = updateUI;
     </script>
 </body>
