@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบบันทึกประวัติการซ่อม Gantry Crane - เชียงราย</title>
-    <!-- Tailwind CSS สำหรับความสวยงาม -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -24,22 +24,39 @@
                 <p class="text-sm text-slate-500">ลานผลิต Parapet โครงการเชียงราย</p>
             </div>
             
-            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">เลือกสถานะผู้ใช้งาน</label>
-                    <select id="loginRole" class="w-full rounded-lg border border-slate-300 p-3 focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                        <option value="mechanic">ช่างผู้ทำการซ่อม (ลงชื่อเข้าใช้)</option>
-                        <option value="visitor">Visitor (เข้าดูประวัติเท่านั้น)</option>
-                    </select>
+            <form id="loginForm" onsubmit="handleMechanicLogin(event)" class="space-y-4">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                    <h2 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        เข้าสู่ระบบสำหรับช่างซ่อม
+                    </h2>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">ช่างผู้ทำการซ่อม</label>
+                        <select id="mechanicName" class="w-full rounded-lg border border-slate-300 p-2.5 text-sm bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none" required>
+                            <option value="นาย ฉัตร จันทร์โชติ">นาย ฉัตร จันทร์โชติ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">รหัสผ่าน (PIN)</label>
+                        <input type="password" id="mechanicPin" placeholder="กรอกรหัสผ่าน (0532)" maxlength="4" class="w-full rounded-lg border border-slate-300 p-2.5 text-sm bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none tracking-widest text-center" required>
+                    </div>
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg transition duration-200 shadow-sm text-sm">
+                        เข้าสู่ระบบ (ช่างซ่อม)
+                    </button>
                 </div>
-                <div id="mechanicNameContainer">
-                    <label class="block text-sm font-medium text-slate-700 mb-1">ชื่อ-นามสกุล ช่างผู้ซ่อม</label>
-                    <input type="text" id="mechanicName" placeholder="เช่น ช่างสมชาย ใจดี" class="w-full rounded-lg border border-slate-300 p-3 focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                </div>
-                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 rounded-lg transition duration-200 shadow-md">
-                    เข้าสู่ระบบ
-                </button>
             </form>
+
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-4 text-slate-400 text-xs">หรือ</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+
+            <!-- Separated Visitor Button -->
+            <button onclick="handleVisitorLogin()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 rounded-lg transition duration-200 border border-slate-300 flex items-center justify-center gap-2 text-sm shadow-sm">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                เข้าชมระบบสำหรับ Visitor (ดูประวัติเท่านั้น)
+            </button>
         </div>
 
         <!-- 2. DASHBOARD / MAIN MENU -->
@@ -145,31 +162,23 @@
         // Set default date to today
         document.getElementById('repairDate').valueAsDate = new Date();
 
-        // Toggle mechanic name input based on role selection
-        document.getElementById('loginRole').addEventListener('change', function(e) {
-            const mechanicContainer = document.getElementById('mechanicNameContainer');
-            if(e.target.value === 'visitor') {
-                mechanicContainer.style.display = 'none';
-            } else {
-                mechanicContainer.style.display = 'block';
-            }
-        });
-
-        function handleLogin(e) {
+        function handleMechanicLogin(e) {
             e.preventDefault();
-            const role = document.getElementById('loginRole').value;
-            let name = document.getElementById('mechanicName').value;
+            const name = document.getElementById('mechanicName').value;
+            const pin = document.getElementById('mechanicPin').value;
 
-            if(role === 'mechanic' && !name.trim()) {
-                alert('กรุณากรอกชื่อช่างผู้ซ่อม');
+            if(pin !== '0532') {
+                alert('รหัสผ่านไม่ถูกต้อง! (รหัสผ่านคือ 0532)');
                 return;
             }
 
-            if(role === 'visitor') {
-                name = 'ผู้เยี่ยมชม (Visitor)';
-            }
+            currentUser = { role: 'mechanic', name: name };
+            localStorage.setItem('gantry_current_user', JSON.stringify(currentUser));
+            updateUI();
+        }
 
-            currentUser = { role, name };
+        function handleVisitorLogin() {
+            currentUser = { role: 'visitor', name: 'ผู้เยี่ยมชม (Visitor)' };
             localStorage.setItem('gantry_current_user', JSON.stringify(currentUser));
             updateUI();
         }
@@ -192,7 +201,6 @@
 
                 // Control permissions
                 const repairTabBtn = document.getElementById('tabBtnRepair');
-                const repairSection = document.getElementById('section-repair');
                 
                 if(currentUser.role === 'visitor') {
                     repairTabBtn.style.opacity = '0.5';
@@ -279,7 +287,7 @@
 
             historyList.innerHTML = history.map(item => `
                 <div class="border rounded-xl p-4 bg-slate-50 flex flex-col md:flex-row gap-4 items-start">
-                    ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full md:w-32 h-32 object-cover rounded-lg border">` : '<div class="w-full md:w-32 h-32 bg-slate-200 rounded-lg flex items-center.center text-xs text-slate-400 justify-center">ไม่มีรูปภาพ</div>'}
+                    ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full md:w-32 h-32 object-cover rounded-lg border">` : '<div class="w-full md:w-32 h-32 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-400">ไม่มีรูปภาพ</div>'}
                     <div class="flex-1 space-y-1">
                         <div class="flex justify-between items-start">
                             <span class="text-xs font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded">วันที่ซ่อม: ${item.date}</span>
